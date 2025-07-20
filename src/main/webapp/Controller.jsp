@@ -10,59 +10,30 @@
 DatabaseClass DAO = new DatabaseClass();
 /* ======================Add New User in database========================= */
 if (request.getParameter("page").toString().equals("NewUser")) {
-	/* String id = RandomIdGenerator.generateRandomString(); */
-	String username = request.getParameter("username");
-	String email = request.getParameter("email");
-	String phone_no = request.getParameter("phone_no");
-	String password = request.getParameter("password");
-
-    GEmailSender gEmailSender = new GEmailSender();
-    String from = "systemonlineexamination@gmail.com";
-    String subject = "OTP Verification";
-    if (DAO.UserValidate(email)) {
-	    OTP otp=new OTP();
-		String otpmessage=otp.generateOTP(6);
-		String text = " Your One Time Password is " +otpmessage +
-						"\n \n Verify your account using this otp";
-	    boolean b = gEmailSender.sendEmail(email, from, subject, text);
-		if (b) {
-			response.sendRedirect("sample.jsp?email="+email+"&otp="+otpmessage+"&username="+username+"&password="+password+"&phone="+phone_no);
-	
-		} else {
-			response.sendRedirect("sample.jsp?msg=unsuccessfully");
-		}
-    }
-    else{
-    	response.sendRedirect("User-Login.jsp?msg=Already");
-    }
-}
-/* ======================Add New User in database========================= */
-else if (request.getParameter("page").toString().equals("New1User")) {
 	String id = RandomIdGenerator.generateRandomString();
-	String username = request.getParameter("username");
-	String email = request.getParameter("email");
-	String phone_no = request.getParameter("phone_no");
-	String password = request.getParameter("password");
-	String otp = request.getParameter("otp");
-	String votp = request.getParameter("votp");
-	if(otp.equals(votp)){
-		User user = new User();
-		user.setId(id);
-		user.setUsername(username);
-		user.setEmail(email);
-		user.setPassword(password);
-		user.setPhone_no(phone_no);
-		user.setCreated_Date(DateFormat.getCurrentDate());
-		if (DAO.saveUser(user)) {
-			response.sendRedirect("User-Login.jsp?msg=successfully");
-	
-		} else {
-			response.sendRedirect("User-Login.jsp?msg=unsuccessfully");
-		}
-	}
-	else{
-		response.sendRedirect("User-Login.jsp?msg=OTPisincorrect");
-	}
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String phone_no = request.getParameter("phone_no");
+        String password = request.getParameter("password");
+
+        // Check if user already exists (UserValidate returns true if not found)
+        if (DAO.UserValidate(email)) {
+            User user = new User();
+            user.setId(id);
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setPhone_no(phone_no);
+            user.setCreated_Date(DateFormat.getCurrentDate());
+
+            if (DAO.saveUser(user)) {
+                response.sendRedirect("User-Login.jsp?msg=successfully");
+            } else {
+                response.sendRedirect("User-Login.jsp?msg=unsuccessfully");
+            }
+        } else {
+            response.sendRedirect("User-Login.jsp?msg=Already");
+        }
 }
 /* ===========================User Login======================================= */
 else if (request.getParameter("page").toString().equals("LoginUser")) {
