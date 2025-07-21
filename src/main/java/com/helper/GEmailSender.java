@@ -18,8 +18,8 @@ public class GEmailSender {
         properties.put("mail.smtp.starttls.enable", true);
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.host", "smtp.gmail.com");
-        final String username = "your gmail account";
-        final String password = "gmail pin";
+        final String username = "haristv23@gmail.com";
+        final String password = "blvhpyrrtydfdofz";
 
 
         //session

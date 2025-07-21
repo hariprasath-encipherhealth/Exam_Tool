@@ -37,8 +37,10 @@ public class DatabaseClass {
 	public boolean UserLoginValidate(String email, String password) {
 		Transaction transaction = null;
 		User user = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			 session = FactoryProvider.getFactory().openSession();
 			// start a transaction
 			transaction = session.beginTransaction();
 			// get an user object
@@ -56,6 +58,11 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
 		return false;
 	}
 
@@ -63,8 +70,9 @@ public class DatabaseClass {
 	public boolean UserValidate(String email) {
 		Transaction transaction = null;
 		User user = null;
+		Session session = null;
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			 session = FactoryProvider.getFactory().openSession();
 			// start a transaction
 			transaction = session.beginTransaction();
 			// get an user object
@@ -80,7 +88,11 @@ public class DatabaseClass {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+
 			e.printStackTrace();
+		}
+		finally {
+			session.close();
 		}
 		return false;
 	}
@@ -90,8 +102,9 @@ public class DatabaseClass {
 		String id = null;
 		Transaction transaction = null;
 		User user = null;
+		Session session = null;
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			// start a transaction
 			transaction = session.beginTransaction();
 			// get an user object
@@ -106,6 +119,11 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
 		return id;
 	}
 
@@ -113,8 +131,10 @@ public class DatabaseClass {
 	public User getUserDetails(String id) {
 		Transaction transaction = null;
 		User user = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			 session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			user = session.get(User.class, id);
 			transaction.commit();
@@ -124,14 +144,21 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
 		return user;
 	}
 
 	// update user details
 	public void updateUserDetails(String id, String username, String email, String password, String phone_no) {
 		Transaction transaction = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			 session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 
 			User user = session.load(User.class, id);
@@ -147,6 +174,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 	}
 
 	// Adding new batch
@@ -164,17 +197,22 @@ public class DatabaseClass {
 				transaction.rollback();
 			}
 			result = false;
-		} finally {
-			session.close();
+		}finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
 	// update batch
 	public void updatebatchDetails(String batchid, String batchname) {
 		Transaction transaction = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Batch batch = session.load(Batch.class, batchid);
 			batch.setBatchname(batchname);
@@ -186,14 +224,22 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 	}
 
 	// get all batch from database
 	public List<Batch> getAllBatch(String addedby) {
 		Transaction transaction = null;
 		List<Batch> ListOfBatch = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfBatch = session.createQuery("FROM Batch s WHERE s.addedby= :addedby").setParameter("addedby", addedby)
 					.getResultList();
@@ -204,6 +250,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfBatch;
 	}
 
@@ -211,8 +263,10 @@ public class DatabaseClass {
 	public Batch getbatchDetails(String batchid) {
 		Transaction transaction = null;
 		Batch batch = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			batch = session.get(Batch.class, batchid);
 			transaction.commit();
@@ -222,6 +276,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return batch;
 	}
 
@@ -230,6 +290,7 @@ public class DatabaseClass {
 		boolean result = true;
 		Session session = null;
 		Transaction transaction = null;
+
 		try {
 			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
@@ -240,9 +301,12 @@ public class DatabaseClass {
 				transaction.rollback();
 			}
 			result = false;
-		} finally {
-			session.close();
+		}finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -250,8 +314,10 @@ public class DatabaseClass {
 	public List<Student> getAllstudent(String studentbatch) {
 		Transaction transaction = null;
 		List<Student> ListOfstudent = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfstudent = session.createQuery("FROM Student s WHERE s.studentbatch= :studentbatch")
 					.setParameter("studentbatch", studentbatch).getResultList();
@@ -262,6 +328,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfstudent;
 	}
 
@@ -269,8 +341,10 @@ public class DatabaseClass {
 	public List<Student> getstudentcount(String addedby) {
 		Transaction transaction = null;
 		List<Student> ListOfstudent = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfstudent = session.createQuery("FROM Student s WHERE s.studentaddedby= :studentaddedby")
 					.setParameter("studentaddedby", addedby).getResultList();
@@ -281,6 +355,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfstudent;
 	}
 
@@ -288,8 +368,10 @@ public class DatabaseClass {
 	public Student getStudentDetails(String studentid) {
 		Transaction transaction = null;
 		Student student = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			student = session.get(Student.class, studentid);
 			transaction.commit();
@@ -299,6 +381,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return student;
 	}
 
@@ -306,8 +394,10 @@ public class DatabaseClass {
 	public void updateStudentDetails(String studentid, String fname, String mname, String lname, String address,
 			String password, String rollno, String gender, java.sql.Date student_dob, String status) {
 		Transaction transaction = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 
 			Student student = session.load(Student.class, studentid);
@@ -328,14 +418,22 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 	}
 
 	// delete Student
 	public Student deleteallStudent(String studentbatch) {
 		Transaction transaction = null;
 		Student student = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Query q = (Query) session.createQuery("delete Student  WHERE studentbatch= :studentbatch")
 					.setParameter("studentbatch", studentbatch);
@@ -347,6 +445,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return student;
 	}
 
@@ -354,8 +458,10 @@ public class DatabaseClass {
 	public Student deleteStudent(String studentid) {
 		Transaction transaction = null;
 		Student student = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			student = session.get(Student.class, studentid);
 			session.delete(student);
@@ -366,6 +472,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return student;
 	}
 
@@ -373,8 +485,10 @@ public class DatabaseClass {
 	public Batch deletebatch(String batchid) {
 		Transaction transaction = null;
 		Batch batch = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			batch = session.get(Batch.class, batchid);
 			session.delete(batch);
@@ -385,6 +499,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return batch;
 	}
 
@@ -392,6 +512,7 @@ public class DatabaseClass {
 	public boolean addexam(Exam exam) {
 		boolean result = true;
 		Session session = null;
+
 		Transaction transaction = null;
 		try {
 			session = FactoryProvider.getFactory().openSession();
@@ -404,8 +525,11 @@ public class DatabaseClass {
 			}
 			result = false;
 		} finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -413,8 +537,10 @@ public class DatabaseClass {
 	public List<Exam> getAllexam(String addedby) {
 		Transaction transaction = null;
 		List<Exam> ListOfexam = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfexam = session.createQuery("FROM Exam s WHERE s.addedby= :addedby").setParameter("addedby", addedby)
 					.getResultList();
@@ -425,6 +551,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfexam;
 	}
 
@@ -432,8 +564,10 @@ public class DatabaseClass {
 	public Exam getexamDetails(String examid) {
 		Transaction transaction = null;
 		Exam exam = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			exam = session.get(Exam.class, examid);
 			transaction.commit();
@@ -443,6 +577,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return exam;
 	}
 
@@ -450,8 +590,10 @@ public class DatabaseClass {
 	public void updateExamDetails(String examid, String examtitle, String examduration, String totalQues,
 			String markright, String markwrong, String examdesc) {
 		Transaction transaction = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Exam exam = session.load(Exam.class, examid);
 			exam.setExamtitle(examtitle);
@@ -470,14 +612,22 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 	}
 
 	// delete exam
 	public Exam deleteexam(String dexamid) {
 		Transaction transaction = null;
 		Exam exam = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			exam = session.get(Exam.class, dexamid);
 			session.delete(exam);
@@ -488,6 +638,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return exam;
 	}
 
@@ -513,8 +669,11 @@ public class DatabaseClass {
 			}
 			result = false;
 		} finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -522,8 +681,10 @@ public class DatabaseClass {
 	public Question getquesDetails(String quesid) {
 		Transaction transaction = null;
 		Question ques = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ques = session.get(Question.class, quesid);
 			transaction.commit();
@@ -533,6 +694,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ques;
 	}
 
@@ -540,8 +707,10 @@ public class DatabaseClass {
 	public List<Question> getAllquestion(String examid) {
 		Transaction transaction = null;
 		List<Question> ListOfques = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfques = session.createQuery("FROM Question s WHERE s.addedby= :addedby")
 					.setParameter("addedby", examid).getResultList();
@@ -552,6 +721,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfques;
 	}
 
@@ -559,8 +734,10 @@ public class DatabaseClass {
 	public List<Question> getexamquestion(String examid) {
 		Transaction transaction = null;
 		List<Question> ListOfques = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfques = session.createQuery("FROM Question s WHERE s.examid= :examid").setParameter("examid", examid)
 					.getResultList();
@@ -571,6 +748,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfques;
 	}
 
@@ -578,9 +761,11 @@ public class DatabaseClass {
 	public ArrayList getQuestions(String examid) {
 		ArrayList list = new ArrayList();
 		Transaction transaction = null;
+		Session session = null;
+
 		Question ques;
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			list = (ArrayList) session.createQuery("FROM Question s WHERE s.examid= :examid")
 					.setParameter("examid", examid).getResultList();
@@ -598,8 +783,10 @@ public class DatabaseClass {
 	public Question deleteallques(String examid) {
 		Transaction transaction = null;
 		Question ques = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Query q = (Query) session.createQuery("delete Question WHERE examid= :examid").setParameter("examid",
 					examid);
@@ -611,6 +798,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ques;
 	}
 
@@ -618,8 +811,10 @@ public class DatabaseClass {
 	public Question deleteques(String quesid) {
 		Transaction transaction = null;
 		Question ques = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ques = session.get(Question.class, quesid);
 			session.delete(ques);
@@ -630,6 +825,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ques;
 	}
 
@@ -652,9 +853,12 @@ public class DatabaseClass {
 				transaction.rollback();
 			}
 			result = false;
-		} finally {
-			session.close();
+		}finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -662,8 +866,10 @@ public class DatabaseClass {
 	public List<Enroll> getenroll(String addedby) {
 		Transaction transaction = null;
 		List<Enroll> ListOfen = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfen = session.createQuery("FROM Enroll s WHERE s.addedby= :addedby").setParameter("addedby", addedby)
 					.getResultList();
@@ -674,6 +880,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfen;
 	}
 
@@ -681,8 +893,10 @@ public class DatabaseClass {
 	public List<Enroll> enrollValidate(String enexamid, String enbatchid) {
 		Transaction transaction = null;
 		List<Enroll> ListOfen = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			String hql = "FROM Enroll s WHERE s.enexamid= :enexamid AND s.enbatchid= :enbatchid";
 			Query q = session.createQuery(hql);
@@ -696,6 +910,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfen;
 	}
 
@@ -703,8 +923,10 @@ public class DatabaseClass {
 	public List<Enroll> getenrollbatch(String enbatchid) {
 		Transaction transaction = null;
 		List<Enroll> ListOfenb = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfenb = session.createQuery("FROM Enroll s WHERE s.enbatchid= :enbatchid")
 					.setParameter("enbatchid", enbatchid).getResultList();
@@ -715,6 +937,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfenb;
 	}
 
@@ -722,8 +950,10 @@ public class DatabaseClass {
 	public Enroll deleteenrol(String enrollid) {
 		Transaction transaction = null;
 		Enroll en = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			en = session.get(Enroll.class, enrollid);
 			session.delete(en);
@@ -734,6 +964,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return en;
 	}
 
@@ -741,8 +977,10 @@ public class DatabaseClass {
 	public Enroll deleteenrole(String examid) {
 		Transaction transaction = null;
 		Enroll en = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Query q = (Query) session.createQuery("delete Enroll WHERE enexamid= :enexamid").setParameter("enexamid",
 					examid);
@@ -754,6 +992,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return en;
 	}
 
@@ -761,8 +1005,10 @@ public class DatabaseClass {
 	public boolean studLoginValidate(String semail, String spassword) {
 		Transaction transaction = null;
 		Student student = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			student = (Student) session.createQuery("FROM Student U WHERE U.studentemailid = :studentemailid")
 					.setParameter("studentemailid", semail).uniqueResult();
@@ -776,6 +1022,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return false;
 	}
 
@@ -784,8 +1036,10 @@ public class DatabaseClass {
 		String id = null;
 		Transaction transaction = null;
 		Student stud = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			stud = (Student) session.createQuery("FROM Student U WHERE U.studentemailid = :studentemailid")
 					.setParameter("studentemailid", email).uniqueResult();
@@ -797,6 +1051,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return id;
 	}
 
@@ -804,8 +1064,10 @@ public class DatabaseClass {
 	public Student getstudDetails(String id) {
 		Transaction transaction = null;
 		Student ss = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ss = session.get(Student.class, id);
 			transaction.commit();
@@ -815,6 +1077,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ss;
 	}
 
@@ -823,6 +1091,7 @@ public class DatabaseClass {
 		boolean result = true;
 		Session session = null;
 		Transaction transaction = null;
+
 		try {
 			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
@@ -838,8 +1107,11 @@ public class DatabaseClass {
 			}
 			result = false;
 		} finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -847,8 +1119,10 @@ public class DatabaseClass {
 	public List<Answer> getans(String exId, String sid) {
 		Transaction transaction = null;
 		List<Answer> anslist = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			String hql = "FROM Answer s WHERE s.exId= :exId AND s.sid= :sid";
 			Query q = session.createQuery(hql);
@@ -862,6 +1136,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return anslist;
 	}
 
@@ -869,8 +1149,10 @@ public class DatabaseClass {
 	public List<Answer> ansdouble(String questionid, String sid) {
 		Transaction transaction = null;
 		List<Answer> anslist = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			String hql = "FROM Answer s WHERE s.questionid= :questionid AND s.sid= :sid";
 			Query q = session.createQuery(hql);
@@ -884,6 +1166,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return anslist;
 	}
 
@@ -903,8 +1191,11 @@ public class DatabaseClass {
 			}
 			result = false;
 		} finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -912,8 +1203,10 @@ public class DatabaseClass {
 	public List<Result> resdouble(String studid, String examid) {
 		Transaction transaction = null;
 		List<Result> res = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			String hql = "FROM Result s WHERE s.studid= :studid AND s.examid= :examid";
 			Query q = session.createQuery(hql);
@@ -927,6 +1220,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return res;
 	}
 
@@ -935,8 +1234,10 @@ public class DatabaseClass {
 		String id = null;
 		Transaction transaction = null;
 		Result res = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			String hql = "FROM Result s WHERE s.studid= :studid AND s.examid= :examid";
 			Query q = session.createQuery(hql);
@@ -951,14 +1252,22 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return id;
 	}
 
 	// update result
 	public void updatereult(String resultid, String marks, String totalmarks) {
 		Transaction transaction = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Result res = session.load(Result.class, resultid);
 			res.setMarks(marks);
@@ -971,14 +1280,21 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
 	}
 
 	// result list from exam id
 	public List<Result> getresultid(String examid) {
 		Transaction transaction = null;
 		List<Result> Listrid = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Listrid = session.createQuery("FROM Result s WHERE s.examid= :examid").setParameter("examid", examid)
 					.getResultList();
@@ -989,6 +1305,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return Listrid;
 	}
 
@@ -1008,8 +1330,11 @@ public class DatabaseClass {
 			}
 			result = false;
 		} finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return result;
 	}
 
@@ -1017,8 +1342,10 @@ public class DatabaseClass {
 	public List<Notice> getnotice(String addedby) {
 		Transaction transaction = null;
 		List<Notice> ListOfno = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfno = session.createQuery("FROM Notice s WHERE s.addedby= :addedby").setParameter("addedby", addedby)
 					.getResultList();
@@ -1029,6 +1356,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return ListOfno;
 	}
 
@@ -1036,8 +1369,10 @@ public class DatabaseClass {
 	public Notice delnotice(String noticeid) {
 		Transaction transaction = null;
 		Notice n = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			n = session.get(Notice.class, noticeid);
 			session.delete(n);
@@ -1048,6 +1383,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return n;
 	}
 
@@ -1055,8 +1396,10 @@ public class DatabaseClass {
 	public Result delresult(String resultid) {
 		Transaction transaction = null;
 		Result n = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			n = session.get(Result.class, resultid);
 			session.delete(n);
@@ -1067,6 +1410,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return n;
 	}
 
@@ -1074,8 +1423,10 @@ public class DatabaseClass {
 	public Answer delans(String sid, String exId) {
 		Transaction transaction = null;
 		Answer n = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete FROM Answer s WHERE s.sid= :sid AND s.exId= :exId");
 			query.setParameter("sid", sid);
@@ -1088,6 +1439,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return n;
 	}
 
@@ -1095,8 +1452,10 @@ public class DatabaseClass {
 	public Result resultdetail(String Resultid) {
 		Transaction transaction = null;
 		Result res = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			res = session.get(Result.class, Resultid);
 			transaction.commit();
@@ -1106,6 +1465,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return res;
 	}
 
@@ -1113,8 +1478,10 @@ public class DatabaseClass {
 	public Result deleteres(String examid) {
 		Transaction transaction = null;
 		Result en = null;
+		Session session = null;
+
 		try {
-			Session session = FactoryProvider.getFactory().openSession();
+			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			Query q = (Query) session.createQuery("delete Result WHERE examid= :examid").setParameter("examid",
 					examid);
@@ -1126,6 +1493,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return en;
 	}
 }

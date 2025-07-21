@@ -3,6 +3,7 @@ package com.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -19,10 +20,12 @@ public class Question {
 	private String examid;
 
 	@NotNull
-	@Column(name = "ques" ,length = 255)
+	@Lob
+	@Column(name = "ques",columnDefinition = "TEXT")
 	private String ques;
 
-	@Column(name = "qdesc" ,length = 255)
+	@Lob
+	@Column(name = "qdesc" ,columnDefinition = "TEXT")
 	private String qdesc;
 	
 	@NotNull
