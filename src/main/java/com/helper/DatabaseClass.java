@@ -28,7 +28,9 @@ public class DatabaseClass {
 			}
 			result = false;
 		} finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
 		return result;
 	}
@@ -92,8 +94,11 @@ public class DatabaseClass {
 			e.printStackTrace();
 		}
 		finally {
-			session.close();
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
 		}
+
 		return false;
 	}
 
@@ -776,6 +781,12 @@ public class DatabaseClass {
 			}
 			e.printStackTrace();
 		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
 		return list;
 	}
 
