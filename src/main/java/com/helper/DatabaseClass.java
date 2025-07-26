@@ -11,6 +11,44 @@ import org.hibernate.query.Query;
 import com.entity.*;
 
 public class DatabaseClass {
+
+	/*----------------------------------new optimized query's----------------------------------------------------*/
+
+	public List<ExamResultDTO> getExamResults(String examid)
+	{
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = FactoryProvider.getFactory().openSession();
+			transaction = session.beginTransaction();
+			String hql = "SELECT new com.entity.ExamResultDTO(" +
+					"r.resultid, r.studid, e.examid, r.marks, r.totalmarks, " +
+					"s.firstname, s.middlename, s.lastname, e.examtitle) " +
+					"FROM Result r " +
+					"JOIN r.student s " +
+					"JOIN r.exam e " +
+					"WHERE r.examid = :examId";
+
+            List<ExamResultDTO> examResultDTOList =  session.createQuery(hql, ExamResultDTO.class)
+                    .setParameter("examId", examid)
+                    .getResultList();
+			System.out.println("Size of the exam result " + examResultDTOList.size());
+			transaction.commit();
+			return examResultDTOList;
+		}
+		catch (Exception e) {
+            e.printStackTrace();
+		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+		return null;
+	}
+
+
+
 	/*----------------------------------User Data----------------------------------------------------*/
 	// saving data in database of new user
 	public boolean saveUser(User user) {

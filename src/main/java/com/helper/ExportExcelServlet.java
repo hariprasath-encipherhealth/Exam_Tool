@@ -2,7 +2,6 @@ package com.helper;
 
 
 import com.entity.*;
-import com.helper.DatabaseClass;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -19,7 +18,7 @@ public class ExportExcelServlet extends HttpServlet {
 
         String gexamid = request.getParameter("gexamid");
         DatabaseClass dao = new DatabaseClass();
-        List<Result> resultList = dao.getresultid(gexamid);
+        List<ExamResultDTO> resultList = dao.getExamResults(gexamid);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Results");
@@ -33,23 +32,21 @@ public class ExportExcelServlet extends HttpServlet {
 
         int rowCount = 1;
         int index = 1;
-        for (Result result : resultList) {
-            Student s = dao.getStudentDetails(result.getStudid());
-            Exam e = dao.getexamDetails(result.getExamid());
+        for (ExamResultDTO examResultDTO : resultList) {
 
-            int total = Integer.parseInt(result.getTotalmarks());
-            int marks = Integer.parseInt(result.getMarks());
+            int total = Integer.parseInt(examResultDTO.getTotalMarks());
+            int marks = Integer.parseInt(examResultDTO.getMarks());
             int percentage = marks * 100 / total;
             String status = percentage > 35 ? "Pass" : "Fail";
 
             Row row = sheet.createRow(rowCount++);
             row.createCell(0).setCellValue(index++);
-            row.createCell(1).setCellValue(s.getFirstname());
-            row.createCell(2).setCellValue(s.getMiddlename());
-            row.createCell(3).setCellValue(s.getLastname());
-            row.createCell(4).setCellValue(e.getExamtitle());
-            row.createCell(5).setCellValue(result.getTotalmarks());
-            row.createCell(6).setCellValue(result.getMarks());
+            row.createCell(1).setCellValue(examResultDTO.getFirstName());
+            row.createCell(2).setCellValue(examResultDTO.getMiddleName());
+            row.createCell(3).setCellValue(examResultDTO.getLastName());
+            row.createCell(4).setCellValue(examResultDTO.getExamTitle());
+            row.createCell(5).setCellValue(examResultDTO.getTotalMarks());
+            row.createCell(6).setCellValue(examResultDTO.getMarks());
             row.createCell(7).setCellValue(status);
             row.createCell(8).setCellValue(percentage + "%");
         }

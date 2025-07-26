@@ -90,7 +90,7 @@ String gexamid = request.getParameter("gexamid");
 
             <% if (request.getParameter("gexamid") != null) {
                 int j = 0;
-                List<Result> Listres = DAO.getresultid(gexamid);
+                List<ExamResultDTO> examResults = DAO.getExamResults(gexamid);
             %>
             <form method="post" action="ExportExcelServlet" style="margin-bottom: 15px;">
                 <input type="hidden" name="gexamid" value="<%=gexamid%>"/>
@@ -109,19 +109,17 @@ String gexamid = request.getParameter("gexamid");
                     <th style="width:7%">Send</th>
                     <th style="width:7%">Delete</th>
                 </tr>
-                <% for (Result resu : Listres) {
-                    Student s1 = DAO.getStudentDetails(resu.getStudid());
-                    Exam e = DAO.getexamDetails(resu.getExamid());
-                    int x = Integer.parseInt(resu.getTotalmarks());
-                    int y = Integer.parseInt(resu.getMarks());
+                <% for (ExamResultDTO examResult : examResults) {
+                    int x = Integer.parseInt(examResult.getTotalMarks());
+                    int y = Integer.parseInt(examResult.getMarks());
                     int z = y * 100 / x;
                 %>
                 <tr>
                     <td><%=j + 1 %></td>
-                    <td><%=s1.getFirstname()%> <%=s1.getMiddlename()%> <%=s1.getLastname()%></td>
-                    <td><%=e.getExamtitle() %></td>
-                    <td><%=resu.getTotalmarks()%></td>
-                    <td><%=resu.getMarks()%></td>
+                    <td><%=examResult.getFirstName()%> <%=examResult.getMiddleName()%> <%=examResult.getLastName()%></td>
+                    <td><%=examResult.getExamTitle() %></td>
+                    <td><%=examResult.getTotalMarks()%></td>
+                    <td><%=examResult.getMarks()%></td>
                     <% if (z > 35) { %>
                         <td>Pass</td>
                     <% } else { %>
@@ -129,12 +127,12 @@ String gexamid = request.getParameter("gexamid");
                     <% } %>
                     <td><%=z %> %</td>
                     <td>
-                        <a href="User-Page.jsp?pg=6&sendresultid=<%=resu.getResultid()%>&sendstudid=<%=resu.getStudid()%>">
+                        <a href="User-Page.jsp?pg=6&sendresultid=<%=examResult.getResultid()%>&sendstudid=<%=examResult.getStudentid()%>">
                             <span class="material-symbols-outlined">send</span>
                         </a>
                     </td>
                     <td>
-                        <a href="User-Page.jsp?pg=6&delresid=<%=resu.getResultid()%>&delans=<%=resu.getStudid()%>&delexm=<%=resu.getExamid()%>">
+                        <a href="User-Page.jsp?pg=6&delresid=<%=examResult.getResultid()%>&delans=<%=examResult.getStudentid()%>&delexm=<%=examResult.getExamid()%>">
                             <span style="color: red;" class="material-symbols-outlined">delete_forever</span>
                         </a>
                     </td>
