@@ -747,7 +747,7 @@ public class DatabaseClass {
 	}
 
 	// get all question
-	public List<Question> getAllquestion(String examid) {
+	public List<Question> getAllquestion(String userId) {
 		Transaction transaction = null;
 		List<Question> ListOfques = null;
 		Session session = null;
@@ -756,7 +756,7 @@ public class DatabaseClass {
 			session = FactoryProvider.getFactory().openSession();
 			transaction = session.beginTransaction();
 			ListOfques = session.createQuery("FROM Question s WHERE s.addedby= :addedby")
-					.setParameter("addedby", examid).getResultList();
+					.setParameter("addedby", userId).getResultList();
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
