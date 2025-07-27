@@ -4,7 +4,11 @@
 <%@page import="com.helper.*"%>
 <%@page import="com.entity.*"%>
 <%@page import="javax.servlet.http.Part"%>
-<%@page import="java.util.List"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.ArrayList" %>
+
 <!-- DAO class calling -->
 <%
 DatabaseClass DAO = new DatabaseClass();
@@ -329,79 +333,84 @@ else if (request.getParameter("page").toString().equals("LoginStudent")) {
 	}
 }
 /* ===========================paper======================================= */
-else if (request.getParameter("page").toString().equals("exams")) {
-	if (request.getParameter("operation").toString().equals("submitted")) {
+else if ("exams".equals(request.getParameter("page"))) {
+    if ("submitted".equals(request.getParameter("operation"))) {
+
         int size = Integer.parseInt(request.getParameter("size"));
         String exId = (String) session.getAttribute("startexam");
         String tMarks = request.getParameter("totalmarks");
         String tMarksw = request.getParameter("totalmarksw");
         String sid = (String) session.getAttribute("studId");
-        int marktot=Integer.parseInt(request.getParameter("marktot"));
+        int marktot = Integer.parseInt(request.getParameter("marktot"));
+
         session.removeAttribute("examStatus");
         session.removeAttribute("startexam");
+
+        // Load all questions once
+        List<Question> questionList = DAO.getAllQuestions(exId);
+        Map<String, Question> questionMap = new HashMap<>();
+        for (Question q : questionList) {
+            questionMap.put(q.getQuesid(), q);
+        }
+
+        List<Answer> answersToInsert = new ArrayList<>();
+        int totalScore = 0;
+
         for (int i = 0; i < size; i++) {
-        	String ansid = RandomIdGenerator.generateRandomString();
+            String ansid = RandomIdGenerator.generateRandomString();
             String questionid = request.getParameter("questionid" + i);
-            Question que=DAO.getquesDetails(questionid);
-            String opt = request.getParameter("opt"+i);
-            String cans=que.getAns();
-            Answer a=new Answer();
-          	a.setExId(exId);
+            String opt = request.getParameter("opt" + i);
+            Question que = questionMap.get(questionid);
+
+            Answer a = new Answer();
+            a.setExId(exId);
             a.setSid(sid);
-            
-            if(request.getParameter("opt"+i).toString().equals(que.getAns())){
-            	a.setMark(tMarks);
-            }
-            
-            else if(request.getParameter("opt"+i).toString().equals("NOTSELECTED")){
-            	a.setMark("0");	
-            }
-            
-            else{
-            	a.setMark(tMarksw);
-            }
-            
             a.setQuestionid(questionid);
             a.setOpt(opt);
             a.setAnsid(ansid);
-            List<Answer> dou =DAO.ansdouble(questionid, sid);
-            
-            if (dou.size()==0) {
-            	DAO.insertAnswer(a);
+
+            // Mark calculation
+            if ("NOTSELECTED".equals(opt)) {
+                a.setMark("0");
+            } else if (que != null && opt.equals(que.getAns())) {
+                a.setMark(tMarks);
+                totalScore += Integer.parseInt(tMarks);
+            } else {
+                a.setMark(tMarksw);
+                totalScore += Integer.parseInt(tMarksw);
             }
+
+            answersToInsert.add(a);
         }
-        int Mark=0;
-        List<Answer> Liste =DAO.getans(exId, sid);
-        	for(Answer ans : Liste) {	
-        	 Mark+=Integer.parseInt(ans.getMark());
-       		}
-        String mark=String.valueOf(Mark);
-        String totalmarks=String.valueOf(marktot);
-        String resultid=RandomIdGenerator.generateRandomString();
-      	Result r=new Result();
-      	r.setExamid(exId);
-      	r.setMarks(mark);
-      	r.setResultid(resultid);
-      	r.setStudid(sid);
-      	r.setTotalmarks(totalmarks);
-      	r.setExstatus("COMPLETE");
-      	List<Result> reos =DAO.resdouble(sid,exId);
-      	int an=reos.size();
-      	System.out.println(an+"aaaaaaaaaaaaaaaaaaa------------------");	
-        if (reos.size()==0) {
-        	DAO.insertResult(r); 
-        	System.out.println("Done");
+
+        // Insert all answers at once
+        DAO.insertAnswers(answersToInsert);
+
+        // Save result
+        String resultid = RandomIdGenerator.generateRandomString();
+        Result r = new Result();
+        r.setExamid(exId);
+        r.setMarks(String.valueOf(totalScore));
+        r.setResultid(resultid);
+        r.setStudid(sid);
+        r.setTotalmarks(String.valueOf(marktot));
+        r.setExstatus("COMPLETE");
+
+        List<Result> reos = DAO.resdouble(sid, exId);
+        if (reos.isEmpty()) {
+            DAO.insertResult(r);
+            System.out.println("Done");
+        } else {
+            String resid = DAO.getres(sid, exId);
+            DAO.updatereult(resid, String.valueOf(totalScore), String.valueOf(marktot));
+            System.out.println(resid + "-----------------------------------");
         }
-        else{
-        	String resid =DAO.getres(sid, exId); 
-        	DAO.updatereult(resid, mark, totalmarks);
-        	
-        	System.out.println(resid+"-----------------------------------");	
-        }
+
         response.sendRedirect("stud-Page.jsp?spg=2");
-        System.out.println(Mark+"-----------------------------------"+marktot);	
-	 } 
+        System.out.println(totalScore + "-----------------------------------" + marktot);
+    }
 }
+
 /* ===========================logout======================================= */
 else if (request.getParameter("page").toString().equals("logout")) {
     session.setAttribute("studStatus", "0");

@@ -47,6 +47,68 @@ public class DatabaseClass {
 		return null;
 	}
 
+	public List<Question> getAllQuestions(String examId) {
+		Transaction transaction = null;
+		List<Question> ListOfques = null;
+		Session session = null;
+
+		try {
+			session = FactoryProvider.getFactory().openSession();
+			transaction = session.beginTransaction();
+			ListOfques = session.createQuery("FROM Question s WHERE s.examid= :examid", Question.class)
+					.setParameter("examid", examId).getResultList();
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		}
+		finally {
+			if (session != null && session.isOpen()) {
+				session.close();  // Always close to prevent connection leak
+			}
+		}
+
+		return ListOfques;
+	}
+
+	public void insertAnswers(List<Answer> answers) {
+		Transaction transaction = null;
+		Session session = null;
+
+		try {
+			session = FactoryProvider.getFactory().openSession();
+			transaction = session.beginTransaction();
+
+			int batchSize = 50;
+			for (int i = 0; i < answers.size(); i++) {
+				session.save(answers.get(i));
+
+				// Flush and clear every batch to avoid memory overhead
+				if (i % batchSize == 0) {
+					session.flush();
+					session.clear();
+				}
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+
+	/*----------------------------------End of optimized query----------------------------------------------------*/
+
+
 
 
 	/*----------------------------------User Data----------------------------------------------------*/
@@ -1176,36 +1238,6 @@ public class DatabaseClass {
 			String hql = "FROM Answer s WHERE s.exId= :exId AND s.sid= :sid";
 			Query q = session.createQuery(hql);
 			q.setParameter("exId", exId);
-			q.setParameter("sid", sid);
-			anslist = q.list();
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-		}
-		finally {
-			if (session != null && session.isOpen()) {
-				session.close();  // Always close to prevent connection leak
-			}
-		}
-
-		return anslist;
-	}
-
-	// list answer from student id and question id
-	public List<Answer> ansdouble(String questionid, String sid) {
-		Transaction transaction = null;
-		List<Answer> anslist = null;
-		Session session = null;
-
-		try {
-			session = FactoryProvider.getFactory().openSession();
-			transaction = session.beginTransaction();
-			String hql = "FROM Answer s WHERE s.questionid= :questionid AND s.sid= :sid";
-			Query q = session.createQuery(hql);
-			q.setParameter("questionid", questionid);
 			q.setParameter("sid", sid);
 			anslist = q.list();
 			transaction.commit();
