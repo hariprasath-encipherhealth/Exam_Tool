@@ -78,7 +78,7 @@ if (session.getAttribute("studStatus") != null) {
 				
 				<div class="newcont">
 					<div class="question1">
-						<p class="ques">Q <%=k+1 %>) <%=ques.getQues() %></p>
+						<pre class="ques">Q <%=k+1 %>)<%=ques.getQues() %></pre>
 						<p class="desc"><%=ques.getQdesc() %></p>
 					</div>
 					
@@ -96,7 +96,11 @@ if (session.getAttribute("studStatus") != null) {
 					</div>
 				</div>
 				<input type="hidden" name="cexamid<%=k %>" value="<%= ques.getExamid()%>">
-				<input type="hidden" name="question<%=k %>" value="<%=ques.getQues() %>">
+				<input type="hidden" name="question<%=k %>"
+                       value="<%= ques.getQues().replace("&", "&amp;")
+                                                 .replace("\"", "&quot;")
+                                                 .replace("<", "&lt;")
+                                                 .replace(">", "&gt;") %>">
 				<input type="hidden" name="questionid<%=k %>" value="<%=ques.getQuesid()%>">
 				<%
 			

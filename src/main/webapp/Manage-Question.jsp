@@ -92,7 +92,12 @@ String delques = request.getParameter("delques");
                         <tr>
                         	<td><%=j+1 %></td>
                         	<td><%=e.getExamtitle()%></td>
-                            <td><%=ques.getQues()%></td>
+                            <td>
+                                <pre style="white-space: pre-wrap; font-family: monospace;">
+                            <%= ques.getQues() != null ? ques.getQues() : "" %>
+                                </pre>
+                            </td>
+
                             <td><%=ques.getOptn1()%></td>
                             <td><%=ques.getOptn2()%></td>
                             <td ><%=ques.getOptn3()%></td>

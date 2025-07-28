@@ -33,8 +33,10 @@ Exam b = DAO.getexamDetails(exmid);
 				</tr>
 				<tr>
 					<td><label>Question</label></td>
-					<td><input type="text" placeholder="Question" class="text"
-						name="ques" required></td>
+					<td><textarea name="ques" rows="5" cols="60" class="text"
+                                          placeholder="Write full question including code indentation"
+                                          style="font-family: monospace;" required></textarea>
+                    </td>
 				</tr>
 				<tr>
 					<td><label>Description</label></td>
