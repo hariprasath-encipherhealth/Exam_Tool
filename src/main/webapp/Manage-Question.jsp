@@ -2,7 +2,9 @@
 <%@page import="com.helper.*"%>
 <%@page import="com.entity.*"%>
 <%@page import="javax.servlet.http.Part"%>
-<%@page import="java.util.List"%>	
+<%@page import="java.util.List"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%
 DatabaseClass DAO = new DatabaseClass();
 /* String id = (String) session.getAttribute("UserId"); */
@@ -70,6 +72,14 @@ String delques = request.getParameter("delques");
                 </div>
                 <hr>
                 <div class="queslist ">
+                    <%
+                        if (request.getParameter("sexamid") != null) {
+                            List<Question> listques = DAO.getexamquestion(sexamid);
+                            Exam exam = DAO.getexamDetails(sexamid);
+                            request.setAttribute("listques", listques);
+                            request.setAttribute("exam", exam);
+                        }
+                    %>
                     <table >
                         <tr>
                         	<th style="width:5%">Sr. No.</th>
@@ -82,51 +92,40 @@ String delques = request.getParameter("delques");
                             <th>Answer</th>
                             <th style="width:7%">Delete</th>
                         </tr>
-                        <% 
-                        if(request.getParameter("sexamid")!=null/* &&request.getParameter("sbatch")!=null  */){  
-                            int j=0;
-							List<Question> Listques = DAO.getexamquestion(sexamid);
-							for(Question ques : Listques) {
-								Exam e=DAO.getexamDetails(ques.getExamid());
-						%>
-                        <tr>
-                        	<td><%=j+1 %></td>
-                        	<td><%=e.getExamtitle()%></td>
-                            <td>
-                                <pre style="white-space: pre-wrap; font-family: monospace;">
-                            <%= ques.getQues() != null ? ques.getQues() : "" %>
-                                </pre>
-                            </td>
 
-                            <td><%=ques.getOptn1()%></td>
-                            <td><%=ques.getOptn2()%></td>
-                            <td ><%=ques.getOptn3()%></td>
-                            <td><%=ques.getOptn4()%></td>
-                            <td><%=ques.getAns()%></td>
-                            <td>
-	                            <a href="User-Page.jsp?pg=4&delques=1&delquesid=<%=ques.getQuesid()%>">
-	                                <span style="color: red;" class="material-symbols-outlined">delete_forever</span>
-                                </a>
-                            </td>
-                        </tr> 
-                        
-                        
-                        <%j++;
-                        	}
-                        	
-	                          
-    					}else{%>
-                        	<tr>
-                        		<td colspan="9"> ----------Select Exam----------</td>
-                        	</tr>
-                       	<%}%>                      
+                        <c:if test="${not empty listques}">
+                            <c:forEach var="ques" items="${listques}" varStatus="loop">
+                                <tr>
+                                    <td>${loop.index + 1}</td>
+                                    <td><c:out value="${exam.examtitle}" /></td>
+                                    <td>
+                                        <pre style="white-space: pre-wrap; font-family: monospace;">
+                                            <c:out value="${ques.ques}" />
+                                        </pre>
+                                    </td>
+                                    <td><c:out value="${ques.optn1}" /></td>
+                                    <td><c:out value="${ques.optn2}" /></td>
+                                    <td><c:out value="${ques.optn3}" /></td>
+                                    <td><c:out value="${ques.optn4}" /></td>
+                                    <td><c:out value="${ques.ans}" /></td>
+                                    <td>
+                                        <a href="User-Page.jsp?pg=4&delques=1&delquesid=${ques.quesid}">
+                                            <span style="color: red;" class="material-symbols-outlined">delete_forever</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:if>
+
+                        <c:if test="${empty listques}">
+                            <tr>
+                                <td colspan="9">----------Select Exam----------</td>
+                            </tr>
+                        </c:if>
                     </table> 
                 </div>
                 <hr>
-            </div> 
-
-
-	
+            </div>
 		</div>
 	</div>
 	     <%
@@ -136,5 +135,5 @@ String delques = request.getParameter("delques");
 	}else{
 		response.sendRedirect("index.jsp");
 	}
-	
+
 	%>
