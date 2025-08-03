@@ -67,31 +67,34 @@ if (session.getAttribute("studStatus") != null) {
                     <div class="newcont">
                         <div class="question1">
                             <!-- Question text (generic types like Predicate<T> handled) -->
-                            <pre class="ques">
-            Q ${loop.index + 1})
-            <c:out value="${fn:replace(fn:replace(ques.ques, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/>
-                            </pre>
+                            <pre class="ques" style="white-space: pre-wrap; display:inline; margin:0;">Q (${loop.index + 1})<c:out value="${fn:replace(fn:replace(ques.ques, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre><br>
                             <!-- Question description -->
-                            <p class="desc">
-                                <c:out value="${fn:replace(fn:replace(ques.qdesc, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/>
-                            </p>
+                            <pre class="desc" style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.qdesc, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                         </div>
                         <div class="Answer">
                             <label class="A1">
-                                <input type="radio" name="opt${loop.index}" onclick="myFunction${loop.index + 1}(this.value)" value="${ques.optn1}">
-                                <c:out value="${fn:replace(fn:replace(ques.optn1, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/>
+                                <input type="radio" name="opt${loop.index}"
+                                       onclick="myFunction${loop.index + 1}(this.value)"
+                                       value="${ques.optn1}">
+                                <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn1, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1">
-                                <input type="radio" name="opt${loop.index}" onclick="myFunction${loop.index + 1}(this.value)" value="${ques.optn2}">
-                                <c:out value="${fn:replace(fn:replace(ques.optn2, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/>
+                                <input type="radio" name="opt${loop.index}"
+                                       onclick="myFunction${loop.index + 1}(this.value)"
+                                       value="${ques.optn2}">
+                                <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn2, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1">
-                                <input type="radio" name="opt${loop.index}" onclick="myFunction${loop.index + 1}(this.value)" value="${ques.optn3}">
-                                <c:out value="${fn:replace(fn:replace(ques.optn3, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/>
+                                <input type="radio" name="opt${loop.index}"
+                                       onclick="myFunction${loop.index + 1}(this.value)"
+                                       value="${ques.optn3}">
+                                <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn3, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1">
-                                <input type="radio" name="opt${loop.index}" onclick="myFunction${loop.index + 1}(this.value)" value="${ques.optn4}">
-                                <c:out value="${fn:replace(fn:replace(ques.optn4, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/>
+                                <input type="radio" name="opt${loop.index}"
+                                       onclick="myFunction${loop.index + 1}(this.value)"
+                                       value="${ques.optn4}">
+                                <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn4, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1" id="radio1">
                                 <input checked type="radio" name="opt${loop.index}" onclick="myFunction${loop.index + 1}(this.value)" value="NOTSELECTED"> Not Selected

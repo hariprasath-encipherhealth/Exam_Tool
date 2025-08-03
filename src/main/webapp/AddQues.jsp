@@ -40,30 +40,37 @@ Exam b = DAO.getexamDetails(exmid);
 				</tr>
 				<tr>
 					<td><label>Description</label></td>
-					<td><input type="text" placeholder="Description" class="text"
-						name="qdesc"></td>
+					<td><textarea rows="3" cols="40" placeholder="Description" class="text"
+						name="qdesc"></textarea>
 				</tr>
 				<tr>
-					<td><label>Option 1</label></td>
-					<td><input type="text" placeholder="Option 1" class="text"
-						name="optn1" ng-model="optn11" required></td>
-				</tr>
-				<tr>
-					<td><label>Option 2</label></td>
-					<td><input type="text" placeholder="Option 2" class="text"
-						name="optn2" ng-model="optn12" required></td>
-				</tr>
-				<tr>
-					<td><label>Option 3</label></td>
-					<td><input type="text" placeholder="Option 3" class="text"
-						name="optn3" ng-model="optn13" required></td>
-				</tr>
-				<tr>
-					<td><label>Option 4</label></td>
-					<td><input type="text" placeholder="Option 4" class="text"
-						name="optn4" ng-model="optn14" required></td>
-				</tr>
-
+                    <td><label>Option 1</label></td>
+                    <td>
+                        <textarea rows="3" cols="40" placeholder="Option 1" class="text"
+                            name="optn1" ng-model="optn11" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Option 2</label></td>
+                    <td>
+                        <textarea rows="3" cols="40" placeholder="Option 2" class="text"
+                            name="optn2" ng-model="optn12" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Option 3</label></td>
+                    <td>
+                        <textarea rows="3" cols="40" placeholder="Option 3" class="text"
+                            name="optn3" ng-model="optn13" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Option 4</label></td>
+                    <td>
+                        <textarea rows="3" cols="40" placeholder="Option 4" class="text"
+                            name="optn4" ng-model="optn14" required></textarea>
+                    </td>
+                </tr>
 				<tr>
 					<td><label>Answer</label></td>
 					<td><select name="ans" class="exam-dropdown" id="batch">

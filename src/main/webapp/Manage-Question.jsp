@@ -99,14 +99,12 @@ String delques = request.getParameter("delques");
                                     <td>${loop.index + 1}</td>
                                     <td><c:out value="${exam.examtitle}" /></td>
                                     <td>
-                                        <pre style="white-space: pre-wrap; font-family: monospace;">
-                                            <c:out value="${ques.ques}" />
-                                        </pre>
+                                        <pre style="white-space: pre-wrap; font-family: monospace;"><c:out value="${ques.ques}" /></pre>
                                     </td>
-                                    <td><c:out value="${ques.optn1}" /></td>
-                                    <td><c:out value="${ques.optn2}" /></td>
-                                    <td><c:out value="${ques.optn3}" /></td>
-                                    <td><c:out value="${ques.optn4}" /></td>
+                                    <td><pre style="white-space: pre-wrap; font-family: monospace;"><c:out value="${ques.optn1}" /></pre></td>
+                                    <td><pre style="white-space: pre-wrap; font-family: monospace;"><c:out value="${ques.optn2}" /></pre></td>
+                                    <td><pre style="white-space: pre-wrap; font-family: monospace;"><c:out value="${ques.optn3}" /></pre></td>
+                                    <td><pre style="white-space: pre-wrap; font-family: monospace;"><c:out value="${ques.optn4}" /></pre></td>
                                     <td><c:out value="${ques.ans}" /></td>
                                     <td>
                                         <a href="User-Page.jsp?pg=4&delques=1&delquesid=${ques.quesid}">
