@@ -64,6 +64,36 @@ if (session.getAttribute("studStatus") != null) {
                 <input type="hidden" name="totalmarksw" value="<%=exdetail.getMarkwrong()%>">
 
                 <c:forEach var="ques" items="${questions}" varStatus="loop">
+                    <%
+                            // Get current object from the loop variable
+                            Question q = (Question) pageContext.getAttribute("ques");
+
+                            // Manual escaping for HTML attribute value
+                            String safeOptn1 = q.getOptn1()
+                                                .replace("&", "&amp;")
+                                                .replace("\"", "&quot;")
+                                                .replace("<", "&lt;")
+                                                .replace(">", "&gt;")
+                                                .replace("\n", "&#10;");
+                            String safeOptn2 = q.getOptn2()
+                                                .replace("&", "&amp;")
+                                                .replace("\"", "&quot;")
+                                                .replace("<", "&lt;")
+                                                .replace(">", "&gt;")
+                                                .replace("\n", "&#10;");
+                            String safeOptn3 = q.getOptn3()
+                                                .replace("&", "&amp;")
+                                                .replace("\"", "&quot;")
+                                                .replace("<", "&lt;")
+                                                .replace(">", "&gt;")
+                                                .replace("\n", "&#10;");
+                            String safeOptn4 = q.getOptn4()
+                                                .replace("&", "&amp;")
+                                                .replace("\"", "&quot;")
+                                                .replace("<", "&lt;")
+                                                .replace(">", "&gt;")
+                                                .replace("\n", "&#10;");
+                        %>
                     <div class="newcont">
                         <div class="question1">
                             <!-- Question text (generic types like Predicate<T> handled) -->
@@ -75,25 +105,25 @@ if (session.getAttribute("studStatus") != null) {
                             <label class="A1">
                                 <input type="radio" name="opt${loop.index}"
                                        onclick="myFunction${loop.index + 1}(this.value)"
-                                       value="${ques.optn1}">
+                                       value="<%= safeOptn1 %>">
                                 <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn1, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1">
                                 <input type="radio" name="opt${loop.index}"
                                        onclick="myFunction${loop.index + 1}(this.value)"
-                                       value="${ques.optn2}">
+                                       value="<%= safeOptn2 %>">
                                 <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn2, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1">
                                 <input type="radio" name="opt${loop.index}"
                                        onclick="myFunction${loop.index + 1}(this.value)"
-                                       value="${ques.optn3}">
+                                       value="<%= safeOptn3 %>">
                                 <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn3, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1">
                                 <input type="radio" name="opt${loop.index}"
                                        onclick="myFunction${loop.index + 1}(this.value)"
-                                       value="${ques.optn4}">
+                                       value="<%= safeOptn4 %>">
                                 <pre style="white-space: pre-wrap; display:inline; margin:0;"><c:out value="${fn:replace(fn:replace(ques.optn4, '<', '&lt;'), '>', '&gt;')}" escapeXml="false"/></pre>
                             </label>
                             <label class="A1" id="radio1">

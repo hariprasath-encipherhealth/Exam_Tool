@@ -357,10 +357,20 @@ else if ("exams".equals(request.getParameter("page"))) {
         int totalScore = 0;
 
         for (int i = 0; i < size; i++) {
+            System.out.println("=== Processing question index: " + i + " ===");
+
             String ansid = RandomIdGenerator.generateRandomString();
+            System.out.println("Generated ansid: " + ansid);
+
             String questionid = request.getParameter("questionid" + i);
+            System.out.println("Fetched questionid: " + questionid);
+
             String opt = request.getParameter("opt" + i);
+            System.out.println("Selected option (raw from request): " + opt);
+
+
             Question que = questionMap.get(questionid);
+            System.out.println("Fetched question object : " + (que != null ? que.toString() : "NULL"));
 
             Answer a = new Answer();
             a.setExId(exId);
@@ -369,18 +379,38 @@ else if ("exams".equals(request.getParameter("page"))) {
             a.setOpt(opt);
             a.setAnsid(ansid);
 
-            // Mark calculation
+            System.out.println("Selected option with trim :" + (opt != null ? opt.trim() : "NULL"));
+            if (que != null) {
+                System.out.println("Actual Answer without trim : " + que.getAns());
+                System.out.println("Actual Answer with trim: " + que.getAns().trim());
+            } else {
+                System.out.println("Actual Answer: NULL (question not found)");
+            }
+
+            // ---- Normalize whitespace (strict matching) ----
+            String normalizedOpt   = (opt != null) ? opt.replaceAll("\\s+", "") : "";
+            String normalizedAnswer = (que != null && que.getAns() != null)
+                                        ? que.getAns().replaceAll("\\s+", "") : "";
+            System.out.println("Normalized option from exam submit : " + normalizedOpt);
+            System.out.println("Normalized answer from database : " + normalizedAnswer);
+
+
+            // ---- Mark calculation ----
             if ("NOTSELECTED".equals(opt)) {
                 a.setMark("0");
-            } else if (que != null && opt.equals(que.getAns())) {
+                System.out.println("Mark assigned: 0 (No option selected)");
+            } else if (normalizedOpt.equals(normalizedAnswer)) {
                 a.setMark(tMarks);
                 totalScore += Integer.parseInt(tMarks);
+                System.out.println("Correct answer -> Mark: " + tMarks + ", Total Score: " + totalScore);
             } else {
                 a.setMark(tMarksw);
                 totalScore += Integer.parseInt(tMarksw);
+                System.out.println("Wrong answer -> Mark: " + tMarksw + ", Total Score: " + totalScore);
             }
 
             answersToInsert.add(a);
+            System.out.println("Answer object added to list: " + a.toString());
         }
 
         // Insert all answers at once
