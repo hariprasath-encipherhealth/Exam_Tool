@@ -14,7 +14,7 @@
 
 		<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
 
-		<property name="connection.url">jdbc:mysql://34.47.214.149:3306/OES_Project</property>
+		<property name="connection.url">jdbc:mysql://34.14.212.178:3306/OES_Project</property>
 
 		<property name="connection.username">admin</property>
 
